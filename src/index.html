@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WP Yükleyicisi</title>
+    <link rel="stylesheet" href="install.min.css">
+    <link rel="stylesheet" href="buttons.min.css">
+    <style>
+        /* Anlık çıktıları göstermek için basit bir stil ekleyelim */
+        #output {
+            display: none; /* Başlangıçta gizli */
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            white-space: pre-wrap; /* Yeni satırları korur */
+        }
+        /* Butonun devre dışı stilini ekleyelim */
+        .button-primary:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+    </style>
+</head>
+<body>
+    <h1>WP Yükleyicisi</h1>
+    <p>WordPress'i sunucuya hızlıca yüklemenizi sağlayan script'e hoşgeldiniz. Başlat butonuna tıklamanız yeterlidir.</p>
+    <p>Dosyalar wordpress klasörüne çıkartılır, gereksinimler aşağıdadır.</p>
+    <h1>Gereksinimler</h1>
+    <p>PHP 7.4 veya üzeri.</p>
+    <p>MySQL 8.0 ve MariaDB 10.4 veya üzeri.</p>
+    <p>HTTPS desteği.</p>
+    <div class="wp-core-ui">
+        <button class="button-primary" id="startButton">Başlat</button>
+    </div>
+    <div id="output"></div> <!-- Çıktıyı göstermek için bu div'i ekledik -->
+    <br>
+    <script>
+        document.getElementById('startButton').addEventListener('click', function() {
+            const button = this;
+            const output = document.getElementById('output');
+
+            // Butonu devre dışı bırak ve output div'ini görünür yap
+            button.disabled = true;
+            output.style.display = 'block';
+            output.textContent = 'İşlem başlatıldı...';
+
+            const xhr = new XMLHttpRequest();
+            xhr.open('POST', 'wp.php', true);
+            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        output.textContent = xhr.responseText;
+                    } else {
+                        output.textContent = 'Bir hata oluştu: ' + xhr.statusText;
+                    }
+                    // Butonu tekrar etkinleştir
+                    button.disabled = false;
+                }
+            };
+
+            xhr.send();
+        });
+    </script>
+</body>
+</html>
