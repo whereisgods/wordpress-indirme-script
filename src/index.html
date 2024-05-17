@@ -37,33 +37,33 @@
     <div id="output"></div> <!-- Çıktıyı göstermek için bu div'i ekledik -->
     <br>
     <script>
-        document.getElementById('startButton').addEventListener('click', function() {
-            const button = this;
-            const output = document.getElementById('output');
+document.getElementById('startButton').addEventListener('click', function() {
+    const button = this;
+    const output = document.getElementById('output');
 
-            // Butonu devre dışı bırak ve output div'ini görünür yap
-            button.disabled = true;
-            output.style.display = 'block';
-            output.textContent = 'İşlem başlatıldı...';
+    // Butonu devre dışı bırak ve output div'ini görünür yap
+    button.disabled = true;
+    output.style.display = 'block';
+    output.innerHTML = 'İşlem başlatıldı...<br>'; // HTML olarak içeriği ekle
 
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', 'wp.php', true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+    const xhr = new XMLHttpRequest();
+    xhr.open('POST', 'wp.php', true);
+    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    if (xhr.status === 200) {
-                        output.textContent = xhr.responseText;
-                    } else {
-                        output.textContent = 'Bir hata oluştu: ' + xhr.statusText;
-                    }
-                    // Butonu tekrar etkinleştir
-                    button.disabled = false;
-                }
-            };
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+            if (xhr.status === 200) {
+                output.innerHTML += xhr.responseText; // HTML olarak ekranı güncelle
+            } else {
+                output.innerHTML += 'Bir hata oluştu: ' + xhr.statusText; // HTML olarak hata mesajını ekle
+            }
+            // Butonu tekrar etkinleştir
+            button.disabled = false;
+        }
+    };
 
-            xhr.send();
-        });
+    xhr.send();
+});
     </script>
 </body>
 </html>
